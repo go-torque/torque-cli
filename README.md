@@ -6,7 +6,9 @@ The nuts and bolts of web services in Go.
 
 Create a Go app and get connected to your services _quickly_.
 
-`torque` works on Linux, OSX and
+`torque` works on Linux, OSX and Windows.
+
+Visit [the docs](https://gotorque.dev/docs) to get a full onboarding experience!
 
 ## Quick Overview
 
