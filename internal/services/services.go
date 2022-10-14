@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"strings"
 
 	"os/exec"
 
@@ -34,20 +35,19 @@ func executeRun(cmd *cobra.Command, args []string) {
 }
 func dockerComposeUp(ctx context.Context) {
 	//TODO: Get Values from config with viper and create COMPOSE_PROFILES
-
-	cmd := exec.CommandContext(ctx, "docker-compose", "up")
-	cmd.Env = append(cmd.Env, "COMPOSE_PROFILES=redis")
-	//TODO: Will add dir flag to set WD if not current dir
 	if workingDir != "" {
-		cmd.Dir = workingDir
+		log.Infof("working dir is %s", workingDir)
 	} else {
 		wd, err := os.Getwd()
+		log.Infof("working dir is %s", wd)
 		if err != nil {
 			log.Errorf("Failed to get working dir: %s", err.Error())
 		}
 		workingDir = wd
 	}
 
+	cmd := exec.CommandContext(ctx, "docker-compose", "--project-directory", workingDir, "up")
+	cmd.Env = append(cmd.Env, "COMPOSE_PROFILES=redis")
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
@@ -60,4 +60,9 @@ func dockerComposeUp(ctx context.Context) {
 
 	err = cmd.Wait()
 	log.Errorf("Command finished with error: %v", err)
+
+	// Inspect the error a bit further to give a recommended action
+	if strings.Contains(err.Error(), "docker-compose-v1") {
+		log.Errorf("ℹ️ docker-compose might not be installed. Try installing docker-compose")
+	}
 }
