@@ -6,7 +6,7 @@ import (
 	"unicode"
 
 	"github.com/apex/log"
-	"github.com/jesseobrien/torque-cli/internal/scaffold"
+	"github.com/go-torque/torque-cli/internal/scaffold"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 )
@@ -46,7 +46,7 @@ func executeController(cmd *cobra.Command, args []string) {
 
 	err = cpf.ScaffoldCustomTemplate(
 		afero.NewOsFs(),
-		fmt.Sprintf("internal/http/%s_controller.go", controllerName),
+		fmt.Sprintf("internal/http/%s_controller.go", strings.ToLower(controllerName)),
 		struct{ ControllerName string }{ControllerName: strings.Title(controllerName)},
 	)
 

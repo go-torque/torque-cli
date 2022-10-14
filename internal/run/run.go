@@ -26,10 +26,11 @@ func executeRun(cmd *cobra.Command, args []string) {
 	rc.Stdout = os.Stdout
 	rc.Stderr = os.Stderr
 
-	out, err := rc.Output()
-	if err != nil {
+	if err := rc.Start(); err != nil {
 		log.Errorf("Failed to run `go run`: %s", err.Error())
 	}
 
-	log.Info(string(out))
+	if err := rc.Wait(); err != nil {
+		log.Errorf("error execing command: %s", err.Error())
+	}
 }

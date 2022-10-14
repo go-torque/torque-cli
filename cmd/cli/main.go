@@ -1,6 +1,6 @@
 package main
 
-import "github.com/jesseobrien/torque-cli/internal"
+import "github.com/go-torque/torque-cli/internal"
 
 func main() {
 	internal.Execute()

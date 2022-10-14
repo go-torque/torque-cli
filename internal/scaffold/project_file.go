@@ -20,6 +20,7 @@ const (
 
 	MAIN_FILE    = "main-file"
 	HTTP_SERVICE = "http-service"
+	NATS_SERVICE = "nats-service"
 	CONTROLLER   = "controller"
 )
 
@@ -76,5 +77,6 @@ var ProjectFiles = map[string]ProjectFile{
 	// Main project files
 	MAIN_FILE:    {"main/main.go.tmpl", "cmd/main/main.go"},
 	HTTP_SERVICE: {"http/http.go.tmpl", "internal/http/http.go"},
+	NATS_SERVICE: {"nats/nats.go.tmpl", "internal/nats/nats.go"},
 	CONTROLLER:   {"http/controller.go.tmpl", "internal/http/app_controller.go"},
 }

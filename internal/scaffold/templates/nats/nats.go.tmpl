@@ -1,0 +1,25 @@
+package nats
+
+import (
+	"os"
+
+	"github.com/apex/log"
+	"github.com/go-torque/torque/srv"
+	"github.com/nats-io/nats.go"
+)
+
+var natsConn *nats.Conn
+
+func Start() {
+	nc, err := srv.NewNatsServer(os.Getenv("NATS_HOST"))
+	natsConn = nc
+
+	if err != nil {
+		log.Errorf("nats connection failed: %s", err.Error())
+	}
+}
+
+func Shutdown() {
+	natsConn.Close()
+}
+

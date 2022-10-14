@@ -13,7 +13,7 @@ Visit [the docs](https://gotorque.dev/docs) to get a full onboarding experience!
 ## Quick Overview
 
 ```sh
-go install github.com/jesseobrien/torque-cli@latest
+go install github.com/go-torque/torque-cli@latest
 torque new HospitalRegistration
 cd HospitalRegistration
 torque watch

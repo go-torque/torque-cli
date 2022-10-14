@@ -23,9 +23,12 @@ type ScaffoldConfig struct {
 	// Custom specified directory for the project files
 	Path string
 
-	ORM   bool
-	AWS   bool
-	Redis bool
+	ORM bool
+	AWS bool
+
+	HttpEnabled  bool
+	NatsEnabled  bool
+	RedisEnabled bool
 }
 
 type Scaffolder struct {
@@ -38,7 +41,7 @@ func NewScaffolder(config ScaffoldConfig) *Scaffolder {
 	}
 
 	if config.ControllerName == "" {
-		config.ControllerName = "app"
+		config.ControllerName = "AppController"
 	}
 
 	return &Scaffolder{Config: config}

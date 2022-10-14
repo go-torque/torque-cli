@@ -9,15 +9,18 @@ import (
 	"strings"
 
 	"github.com/apex/log"
-	"github.com/jesseobrien/torque-cli/internal/scaffold"
+	"github.com/go-torque/torque-cli/internal/scaffold"
 	"github.com/spf13/cobra"
 )
 
 var (
-	dry        bool
-	moduleName string
-	customPath string
-	orm        bool
+	dry          bool
+	moduleName   string
+	customPath   string
+	orm          bool
+	httpEnabled  bool
+	natsEnabled  bool
+	redisEnabled bool
 
 	InitCmd = &cobra.Command{
 		Use:   "new [appname]",
@@ -31,6 +34,9 @@ var (
 func init() {
 	InitCmd.PersistentFlags().BoolVar(&dry, "dry-run", false, "Whether torque will do a dry run of scaffolding everything and clean up after.")
 	InitCmd.PersistentFlags().BoolVar(&orm, "orm", true, "If orm is false, torque will not generate ORM database files.")
+	InitCmd.PersistentFlags().BoolVar(&httpEnabled, "http", true, "If http is false, torque will not generate http connection files and services.")
+	InitCmd.PersistentFlags().BoolVar(&natsEnabled, "nats", false, "If nats is true, torque will generate nats.io connection files and services.")
+	InitCmd.PersistentFlags().BoolVar(&redisEnabled, "redis", false, "If nats is true, torque will generate redis connection files and services.")
 	InitCmd.PersistentFlags().StringVar(&customPath, "dir", "", "Provide a custom path to scaffold the project into.")
 	InitCmd.PersistentFlags().StringVar(&moduleName, "mod-name", "", "The go module name that will be used to initialize go.mod. If none is specified, the project name is used.")
 }
@@ -71,11 +77,16 @@ func executeInit(cmd *cobra.Command, args []string) {
 	}
 
 	cfg := scaffold.ScaffoldConfig{
-		AppName: appName,
-		ModName: modName,
-		Path:    appDir,
-		ORM:     orm,
+		AppName:      appName,
+		ModName:      modName,
+		Path:         appDir,
+		ORM:          orm,
+		HttpEnabled:  httpEnabled,
+		NatsEnabled:  natsEnabled,
+		RedisEnabled: redisEnabled,
 	}
+
+	log.Infof("Nats Enabled %t", natsEnabled)
 
 	s := scaffold.NewScaffolder(cfg)
 
@@ -159,9 +170,16 @@ func createProjectDirectories(appName string) error {
 	directoryTree := []string{
 		"cmd/main",
 		"dist",
-		"internal/http",
 		"internal/data",
 		"tmp",
+	}
+
+	if httpEnabled {
+		directoryTree = append(directoryTree, "internal/http")
+	}
+
+	if natsEnabled {
+		directoryTree = append(directoryTree, "internal/nats")
 	}
 
 	for _, directory := range directoryTree {

@@ -1,13 +1,21 @@
 package http
 
 import (
+	"context"
+
 	"github.com/apex/log"
 	"github.com/go-torque/torque/srv"
 )
 
+var e *srv.HttpServer
+
 func Start() {
-	e := srv.NewHttpServer()
+	e = srv.NewHttpServer()
 
 	log.Fatal(e.Start(":8000").Error())
+}
+
+func Shutdown(ctx context.Context) error {
+	return e.Shutdown(ctx)
 }
 

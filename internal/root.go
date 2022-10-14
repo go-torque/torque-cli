@@ -5,11 +5,11 @@ import (
 
 	"github.com/apex/log"
 	"github.com/apex/log/handlers/cli"
-	"github.com/jesseobrien/torque-cli/internal/config"
-	"github.com/jesseobrien/torque-cli/internal/gen"
-	"github.com/jesseobrien/torque-cli/internal/new"
-	"github.com/jesseobrien/torque-cli/internal/run"
-	"github.com/jesseobrien/torque-cli/internal/watch"
+	"github.com/go-torque/torque-cli/internal/config"
+	"github.com/go-torque/torque-cli/internal/gen"
+	"github.com/go-torque/torque-cli/internal/new"
+	"github.com/go-torque/torque-cli/internal/run"
+	"github.com/go-torque/torque-cli/internal/watch"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )

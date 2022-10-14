@@ -1,0 +1,13 @@
+package dependencies
+
+import (
+  {{ if .NatsEnabled }}
+  "github.com/nats-io/nats.go"
+  {{ end }}
+)
+
+type Dependencies struct {
+  {{ if .NatsEnabled }}
+  Nats *nats.Conn
+  {{ end }}
+}

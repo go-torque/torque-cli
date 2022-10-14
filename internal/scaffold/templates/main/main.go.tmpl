@@ -1,14 +1,17 @@
 package main
 
 import (
+	"context"
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"github.com/apex/log"
 	"github.com/apex/log/handlers/cli"
 
 	"{{ .ModName }}/internal/http"
+	{{ if .NatsEnabled }}"{{ .ModName }}/internal/nats"{{ end }}
 )
 
 func init() {
@@ -19,11 +22,35 @@ func main() {
 	done := make(chan os.Signal, 1)
 	signal.Notify(done, syscall.SIGINT, syscall.SIGTERM)
 
+	// Attach the bits here to a standard set of dependencies
+{{ if .HttpEnabled }}
 	go func() {
 		http.Start()
 	}()
+{{ end }}
+{{ if .NatsEnabled }}
+	go func() {
+		nats.Start()
+	}()
+{{ end }}
 
 	<-done
 
+	_, cancel := context.WithTimeout(context.Background(), 5 * time.Second)
+
+{{ if .HttpEnabled }}
+	defer ShutdownServices(cancel)
+{{ end }}
+
 	log.Info("Server shutting down")
+}
+
+func ShutdownServices(cancel context.CancelFunc) {
+	{{ if .NatsEnabled }}nats.Shutdown(){{ end }}
+{{ if .HttpEnabled }}
+	if err := http.Shutdown(context.Background()); err != nil {
+		log.Errorf(err.Error())
+	}
+{{ end }}
+	cancel()
 }
